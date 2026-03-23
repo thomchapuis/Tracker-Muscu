@@ -8,7 +8,7 @@ from stats import (
     volume_par_seance, charge_par_groupe_semaine,
     progression_exercice, volume_exercice, resume_semaine
 )
-from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP
+from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES
 
 st.set_page_config(
     page_title="Workout Tracker",
@@ -36,8 +36,8 @@ with tab1:
 
     col1, col2 = st.columns([2, 1])
     with col1:
-        groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISE_TO_GROUP.keys()))
-        exercice = st.selectbox("Exercice", ALL_EXERCISES[groupe_filtre])
+        groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISES.keys()))
+        exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre])
     with col2:
         seance_date = st.date_input("Date", value=date.today())
 
