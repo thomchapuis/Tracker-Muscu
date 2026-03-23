@@ -115,7 +115,7 @@ with tab1:
         .sort_index(ascending=True)
         .head(6)
         .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y")),
-        hide_index=True,
+        #hide_index=True,
         use_container_width=True,
     )
     
