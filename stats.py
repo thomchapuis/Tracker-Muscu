@@ -17,7 +17,7 @@ def charge_par_groupe_semaine(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df["semaine"] = df["date"].dt.to_period("W").astype(str)
     return (
-        df.groupby(["semaine", "groupe_musculaire"])["series"]
+        df.groupby(["semaine", "groupe"])["series"]
         .sum()
         .reset_index()
     )
@@ -52,5 +52,5 @@ def resume_semaine(df: pd.DataFrame) -> dict:
         "seances": week_df["date"].nunique(),
         "series_totales": int(week_df["series"].sum()),
         "volume_total": int((week_df["series"] * week_df["reps"] * week_df["poids_kg"]).sum()),
-        "groupes_travailles": week_df["groupe_musculaire"].nunique(),
+        "groupes_travailles": week_df["groupe"].nunique(),
     }
