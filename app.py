@@ -61,7 +61,7 @@ with tab1:
             last_poids = 0.0
             if not df.empty and exercice in df["exercice"].values:
                 last_poids = float(df[df["exercice"] == exercice]["poids_kg"].iloc[-1])
-            poids = st.number_input("Poids (kg)", min_value=0.0, step=1, value=last_poids)
+            poids = st.number_input("Poids (kg)", min_value=0.0, step=1.0, value=last_poids)
 
         notes = st.text_input("Notes", placeholder="Optionnel...", key="notes_seance")
 
@@ -100,7 +100,7 @@ with tab1:
             last_poids = 0.0
             if not df.empty and exercice in df["exercice"].values:
                 last_poids = float(df[df["exercice"] == exercice]["poids_kg"].iloc[-1])
-            poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25, value=last_poids, key="p_iso")
+            poids = st.number_input("Poids (kg)", min_value=0.0, step=1.0, value=last_poids, key="p_iso")
 
         notes = st.text_input("Notes", placeholder="Optionnel...", key="notes_iso")
 
@@ -158,7 +158,7 @@ with tab2:
                     new_reps = st.number_input("Reps", min_value=1, max_value=100,
                                                 value=int(row["reps"]), key=f"r_{row['id']}")
                 with col_c:
-                    new_poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25,
+                    new_poids = st.number_input("Poids (kg)", min_value=0.0, step=1.0,
                                                  value=float(row["poids_kg"]), key=f"p_{row['id']}")
                 with col_d:
                     new_notes = st.text_input("Notes", value=str(row["notes"]), key=f"n_{row['id']}")
