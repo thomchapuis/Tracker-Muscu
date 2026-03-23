@@ -32,7 +32,7 @@ EXERCISES = {
         "Ischio assis - machine",
         "Ischio couché - machine",
         "Soulevé de terre",
-        "Soulevé de Terre Roumain",
+        "Soulevé de terre roumain",
         "Leg curl",
         "Presse à cuisses",
         "Fentes",
