@@ -126,9 +126,9 @@ with tab3:
         # Charge par groupe musculaire / semaine
         charge = charge_par_groupe_semaine(df)
         fig_charge = px.bar(charge, x="semaine", y="series",
-                            color="groupe_musculaire",
+                            color="groupe",
                             title="Séries par groupe musculaire / semaine",
-                            labels={"series": "Séries", "semaine": "", "groupe_musculaire": "Groupe"})
+                            labels={"series": "Séries", "semaine": "", "groupe": "Groupe"})
         st.plotly_chart(fig_charge, use_container_width=True)
 
 # ════════════════════════════════════════════════════════════════════
