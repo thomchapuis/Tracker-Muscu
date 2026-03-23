@@ -34,12 +34,12 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     st.subheader("Séance du jour")
 
-    col1, col2 = st.columns([2, 1])
+    seance_date = st.date_input("Date", value=date.today())
+    col1, col2 = st.columns([1, 3])
     with col1:
         groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISES.keys()))
-        exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre])
     with col2:
-        seance_date = st.date_input("Date", value=date.today())
+        exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre])
 
     col3, col4, col5 = st.columns(3)
     with col3:
