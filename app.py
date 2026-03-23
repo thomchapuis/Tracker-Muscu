@@ -113,7 +113,7 @@ with tab1:
     st.dataframe(
         #df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
         df
-        .sort_index(ascending=True)
+        .sort_values("id", ascending=False)
         .head(6)
         .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y")),
         #hide_index=True,
