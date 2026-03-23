@@ -84,12 +84,12 @@ with tab1:
                 )
 
     else:  # Série isolée
+        seance_date = st.date_input("Date", value=date.today(), key="date_iso")
         col1, col2 = st.columns([2, 1])
         with col1:
             groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISES.keys()), key="groupe_iso")
-            exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre], key="ex_iso")
         with col2:
-            seance_date = st.date_input("Date", value=date.today(), key="date_iso")
+            exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre], key="ex_iso")
 
         col3, col4, col5 = st.columns(3)
         with col3:
