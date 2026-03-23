@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from datetime import date
 
-from data import load_data, save_set,get_client
+from data import load_data, save_set, get_client, delete_row
 from stats import (
     volume_par_seance, charge_par_groupe_semaine,
     progression_exercice, volume_exercice, resume_semaine
