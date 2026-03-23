@@ -103,22 +103,25 @@ with tab1:
             poids = st.number_input("Poids (kg)", min_value=0.0, step=1.0, value=last_poids, key="p_iso")
 
         notes = st.text_input("Notes", placeholder="Optionnel...", key="notes_iso")
-
+        
         if st.button("✅ Enregistrer", use_container_width=True, type="primary"):
             groupe = EXERCISE_TO_GROUP.get(exercice, "Autre")
             save_set(seance_date, exercice, groupe, series, reps, poids, notes)
             st.success(f"Enregistré : {exercice} — {series}×{reps} @ {poids}kg")
             st.rerun()
-    
-    st.dataframe(
-        #df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
-        df
-        .sort_values("id", ascending=False)
-        .head(6)
-        .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y")),
-        hide_index=True,
-        use_container_width=True,
-    )
+            st.write('Dernières séries ajoutées')
+        
+        st.dataframe(
+            #df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
+            df
+            .sort_values("id", ascending=False)
+            .head(6)
+            .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y")),
+            hide_index=True,
+            use_container_width=True,
+        )
+
+
     
 # ════════════════════════════════════════════════════════════════════
 # TAB 2 — Historique
