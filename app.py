@@ -109,7 +109,7 @@ with tab1:
             save_set(seance_date, exercice, groupe, series, reps, poids, notes)
             st.success(f"Enregistré : {exercice} — {series}×{reps} @ {poids}kg")
             st.rerun()
-
+    st.dataframe(df.head(3))
 # ════════════════════════════════════════════════════════════════════
 # TAB 2 — Historique
 # ════════════════════════════════════════════════════════════════════
