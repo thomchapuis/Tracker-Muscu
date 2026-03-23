@@ -61,7 +61,7 @@ with tab1:
             last_poids = 0.0
             if not df.empty and exercice in df["exercice"].values:
                 last_poids = float(df[df["exercice"] == exercice]["poids_kg"].iloc[-1])
-            poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25, value=last_poids)
+            poids = st.number_input("Poids (kg)", min_value=0.0, step=1, value=last_poids)
 
         notes = st.text_input("Notes", placeholder="Optionnel...", key="notes_seance")
 
