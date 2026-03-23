@@ -34,44 +34,77 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     st.subheader("Séance du jour")
 
-    seance_date = st.date_input("Date", value=date.today())
-    col1, col2 = st.columns([1, 3])
-    with col1:
+    mode = st.radio("Mode de saisie", ["Séance complète", "Série isolée"], horizontal=True)
+
+    if mode == "Séance complète":
+        col1, col2 = st.columns(2)
+        with col1:
+            seance_date = st.date_input("Date", value=date.today(), key="date_seance")
+        with col2:
+            dominante = st.selectbox("Dominante", ["Haut du corps", "Jambes", "Full body", "Cardio"])
+
+        st.divider()
+
         groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISES.keys()))
-    with col2:
         exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre])
 
-    col3, col4, col5 = st.columns(3)
-    with col3:
-        series = st.number_input("Séries", min_value=1, max_value=20, value=3)
-    with col4:
-        reps = st.number_input("Reps", min_value=1, max_value=100, value=10)
-    with col5:
-        # Suggère le dernier poids utilisé pour cet exercice
-        last_poids = 0.0
-        if not df.empty and exercice in df["exercice"].values:
-            last_poids = float(df[df["exercice"] == exercice]["poids_kg"].iloc[-1])
-        poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25, value=last_poids)
+        col3, col4, col5 = st.columns(3)
+        with col3:
+            series = st.number_input("Séries", min_value=1, max_value=20, value=3)
+        with col4:
+            reps = st.number_input("Reps", min_value=1, max_value=100, value=10)
+        with col5:
+            last_poids = 0.0
+            if not df.empty and exercice in df["exercice"].values:
+                last_poids = float(df[df["exercice"] == exercice]["poids_kg"].iloc[-1])
+            poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25, value=last_poids)
 
-    notes = st.text_input("Notes (optionnel)", placeholder="Bonne séance, fatigue...")
+        notes = st.text_input("Notes", placeholder="Optionnel...", key="notes_seance")
 
-    if st.button("✅ Enregistrer la série", use_container_width=True, type="primary"):
-        groupe = EXERCISE_TO_GROUP.get(exercice, "Autre")
-        save_set(seance_date, exercice, groupe, series, reps, poids, notes)
-        st.success(f"Enregistré : {exercice} — {series}×{reps} @ {poids}kg")
-        st.rerun()
+        if st.button("✅ Ajouter cette série", use_container_width=True, type="primary"):
+            groupe = EXERCISE_TO_GROUP.get(exercice, "Autre")
+            save_set(seance_date, exercice, groupe, series, reps, poids, notes)
+            st.success(f"{exercice} — {series}×{reps} @ {poids}kg ajouté")
+            st.rerun()
 
-    # Aperçu de la séance en cours
-    if not df.empty:
-        today_df = df[df["date"].dt.date == seance_date]
-        if not today_df.empty:
-            st.divider()
-            st.caption("Séries enregistrées aujourd'hui")
-            st.dataframe(
-                today_df[["exercice", "series", "reps", "poids_kg", "notes"]],
-                hide_index=True,
-                use_container_width=True,
-            )
+        # Aperçu séance en cours
+        if not df.empty:
+            today_df = df[df["date"].dt.date == seance_date]
+            if not today_df.empty:
+                st.divider()
+                st.caption(f"Séries enregistrées le {seance_date.strftime('%d/%m/%Y')}")
+                st.dataframe(
+                    today_df[["exercice", "groupe", "series", "reps", "poids_kg", "notes"]],
+                    hide_index=True,
+                    use_container_width=True,
+                )
+
+    else:  # Série isolée
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISES.keys()), key="groupe_iso")
+            exercice = st.selectbox("Exercice", EXERCISES[groupe_filtre], key="ex_iso")
+        with col2:
+            seance_date = st.date_input("Date", value=date.today(), key="date_iso")
+
+        col3, col4, col5 = st.columns(3)
+        with col3:
+            series = st.number_input("Séries", min_value=1, max_value=20, value=3, key="s_iso")
+        with col4:
+            reps = st.number_input("Reps", min_value=1, max_value=100, value=10, key="r_iso")
+        with col5:
+            last_poids = 0.0
+            if not df.empty and exercice in df["exercice"].values:
+                last_poids = float(df[df["exercice"] == exercice]["poids_kg"].iloc[-1])
+            poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25, value=last_poids, key="p_iso")
+
+        notes = st.text_input("Notes", placeholder="Optionnel...", key="notes_iso")
+
+        if st.button("✅ Enregistrer", use_container_width=True, type="primary"):
+            groupe = EXERCISE_TO_GROUP.get(exercice, "Autre")
+            save_set(seance_date, exercice, groupe, series, reps, poids, notes)
+            st.success(f"Enregistré : {exercice} — {series}×{reps} @ {poids}kg")
+            st.rerun()
 
 # ════════════════════════════════════════════════════════════════════
 # TAB 2 — Historique
