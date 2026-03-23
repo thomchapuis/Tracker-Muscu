@@ -109,8 +109,8 @@ with tab1:
             save_set(seance_date, exercice, groupe, series, reps, poids, notes)
             st.success(f"Enregistré : {exercice} — {series}×{reps} @ {poids}kg")
             st.rerun()
-            st.write('Dernières séries ajoutées')
-        
+            
+        st.write('Dernières séries ajoutées')
         st.dataframe(
             #df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
             df
