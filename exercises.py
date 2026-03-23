@@ -2,12 +2,21 @@ EXERCISES = {
     "Pectoraux": [
         "Développé couché barre",
         "Développé couché haltères",
-        "Développé incliné",
+        "Développé couché Smith",
+        "Développé incliné barre",
+        "Développé incliné haltères",
+        "Développé incliné Smith",
+        "Chest Press BasicFit",
+        "Écarté haltère",
+        "Écartés machine - Butterfly Chest BasicFit",
         "Écarté poulie",
         "Dips",
     ],
     "Dos": [
-        "Tractions",
+        "Tractions prise pronation",
+        "Tractions prise pronation large",
+        "Tractions prise supination",
+        "Tractions prise neutre",
         "Rowing barre",
         "Rowing haltère",
         "Tirage vertical",
@@ -20,9 +29,13 @@ EXERCISES = {
     ],
     "Jambes": [
         "Squat",
+        "Ischio assis - machine",
+        "Ischio couché - machine",
+        "Soulevé de terre",
+        "Soulevé de Terre Roumain",
+        "Leg curl",
         "Presse à cuisses",
         "Fentes",
-        "Leg curl",
         "Mollets",
     ],
     "Bras": [
@@ -30,6 +43,12 @@ EXERCISES = {
         "Curl haltères",
         "Dips triceps",
         "Extensions triceps",
+    ],
+    
+    "Grip": [
+        "Suspendu 1 bras - gauche",
+        "Suspendu 1 bras - droite",
+        "Dead Hang",
     ],
     "Abdos / Gainage": [
         "Planche",
