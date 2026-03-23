@@ -110,7 +110,13 @@ with tab1:
             st.success(f"Enregistré : {exercice} — {series}×{reps} @ {poids}kg")
             st.rerun()
     
-    st.dataframe(df[['date','exercice','groupe','series','reps','poids_kg','notes']].head(6))
+    st.dataframe(
+        df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
+        .head(6)
+        .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y")),
+        hide_index=True,
+        use_container_width=True,
+    )
     
 # ════════════════════════════════════════════════════════════════════
 # TAB 2 — Historique
