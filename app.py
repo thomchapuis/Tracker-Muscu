@@ -3,12 +3,13 @@ import pandas as pd
 import plotly.express as px
 from datetime import date
 
-from data import load_data, save_set
+from data import load_data, save_set,get_client
 from stats import (
     volume_par_seance, charge_par_groupe_semaine,
     progression_exercice, volume_exercice, resume_semaine
 )
 from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES
+
 
 st.set_page_config(
     page_title="Workout Tracker",
@@ -120,17 +121,53 @@ with tab2:
         with col_f2:
             n_days = st.selectbox("Période", [7, 30, 90, 365], index=1)
 
-        filtered = df[df["date"] >= pd.Timestamp.today() - pd.Timedelta(days=n_days)]
+        filtered = df[df["date"] >= pd.Timestamp.today() - pd.Timedelta(days=n_days)].copy()
         if ex_filter:
             filtered = filtered[filtered["exercice"].isin(ex_filter)]
 
-        st.dataframe(
+        filtered_display = (
             filtered.sort_values("date", ascending=False)
                     .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y"))
-                    [["date", "exercice", "groupe", "series", "reps", "poids_kg", "notes"]],
-            hide_index=True,
-            use_container_width=True,
+                    [["id", "date", "exercice", "groupe", "series", "reps", "poids_kg", "notes"]]
         )
+
+        st.divider()
+
+        # ── Affichage ligne par ligne avec actions ──
+        for _, row in filtered_display.iterrows():
+            with st.expander(f"{row['date']} — {row['exercice']} — {row['series']}×{row['reps']} @ {row['poids_kg']}kg"):
+
+                col_a, col_b, col_c, col_d, col_e = st.columns(5)
+                with col_a:
+                    new_series = st.number_input("Séries", min_value=1, max_value=20,
+                                                  value=int(row["series"]), key=f"s_{row['id']}")
+                with col_b:
+                    new_reps = st.number_input("Reps", min_value=1, max_value=100,
+                                                value=int(row["reps"]), key=f"r_{row['id']}")
+                with col_c:
+                    new_poids = st.number_input("Poids (kg)", min_value=0.0, step=1.25,
+                                                 value=float(row["poids_kg"]), key=f"p_{row['id']}")
+                with col_d:
+                    new_notes = st.text_input("Notes", value=str(row["notes"]), key=f"n_{row['id']}")
+                with col_e:
+                    st.write("")
+                    st.write("")
+                    if st.button("💾 Sauvegarder", key=f"save_{row['id']}"):
+                        get_client().table("workouts").update({
+                            "series":   int(new_series),
+                            "reps":     int(new_reps),
+                            "poids_kg": float(new_poids),
+                            "notes":    new_notes,
+                        }).eq("id", int(row["id"])).execute()
+                        st.cache_data.clear()
+                        st.success("Modifié ✓")
+                        st.rerun()
+
+                st.write("")
+                if st.button("🗑️ Supprimer cette série", key=f"del_{row['id']}", type="secondary"):
+                    delete_row(int(row["id"]))
+                    st.success("Supprimé ✓")
+                    st.rerun()
 
 # ════════════════════════════════════════════════════════════════════
 # TAB 3 — Stats & charge
