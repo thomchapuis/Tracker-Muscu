@@ -93,7 +93,7 @@ with tab2:
         st.dataframe(
             filtered.sort_values("date", ascending=False)
                     .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y"))
-                    [["date", "exercice", "groupe_musculaire", "series", "reps", "poids_kg", "notes"]],
+                    [["date", "exercice", "groupe", "series", "reps", "poids_kg", "notes"]],
             hide_index=True,
             use_container_width=True,
         )
