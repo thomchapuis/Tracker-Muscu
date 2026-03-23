@@ -6,8 +6,11 @@ from datetime import date
 from data import load_data, save_set, get_client, delete_row
 from stats import (
     volume_par_seance, charge_par_groupe_semaine,
-    progression_exercice, volume_exercice, resume_semaine
+    progression_exercice, volume_exercice, resume_semaine,
+    radar_repartition, top_exercices, rapport_mensuel   # ← nouveaux
 )
+import plotly.graph_objects as go
+import calendar
 from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES
 
 
@@ -177,7 +180,7 @@ with tab3:
     if df.empty:
         st.info("Aucune donnée encore.")
     else:
-        # Résumé semaine
+        # ── Résumé semaine ──
         resume = resume_semaine(df)
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Séances cette semaine", resume["seances"])
@@ -187,20 +190,93 @@ with tab3:
 
         st.divider()
 
-        # Volume par séance
+        # ── Volume par séance ──
         vol = volume_par_seance(df)
         fig_vol = px.bar(vol, x="date", y="volume",
                          title="Volume par séance (séries × reps × poids)",
                          labels={"volume": "Volume (kg)", "date": ""})
         st.plotly_chart(fig_vol, use_container_width=True)
 
-        # Charge par groupe musculaire / semaine
-        charge = charge_par_groupe_semaine(df)
-        fig_charge = px.bar(charge, x="semaine", y="series",
-                            color="groupe",
-                            title="Séries par groupe musculaire / semaine",
-                            labels={"series": "Séries", "semaine": "", "groupe": "Groupe"})
-        st.plotly_chart(fig_charge, use_container_width=True)
+        st.divider()
+
+        # ── Répartition musculaire — Radar ──
+        st.markdown("#### Répartition musculaire")
+        col_r1, col_r2 = st.columns(2)
+        with col_r1:
+            periode1 = st.selectbox("Période A", ["7 derniers jours", "30 derniers jours", "90 derniers jours"], index=1, key="p1")
+        with col_r2:
+            periode2 = st.selectbox("Période B", ["7 derniers jours", "30 derniers jours", "90 derniers jours"], index=2, key="p2")
+
+        jours_map = {"7 derniers jours": 7, "30 derniers jours": 30, "90 derniers jours": 90}
+
+        df1 = radar_repartition(df, periode1, jours_map[periode1])
+        df2 = radar_repartition(df, periode2, jours_map[periode2])
+        tous_groupes = sorted(df["groupe"].unique().tolist())
+
+        def to_radar_values(radar_df, groupes):
+            mapping = dict(zip(radar_df["groupe"], radar_df["total"]))
+            return [mapping.get(g, 0) for g in groupes]
+
+        vals1 = to_radar_values(df1, tous_groupes)
+        vals2 = to_radar_values(df2, tous_groupes)
+
+        fig_radar = go.Figure()
+        fig_radar.add_trace(go.Scatterpolar(
+            r=vals1 + [vals1[0]], theta=tous_groupes + [tous_groupes[0]],
+            fill="toself", name=periode1, opacity=0.6
+        ))
+        fig_radar.add_trace(go.Scatterpolar(
+            r=vals2 + [vals2[0]], theta=tous_groupes + [tous_groupes[0]],
+            fill="toself", name=periode2, opacity=0.4
+        ))
+        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True)), showlegend=True)
+        st.plotly_chart(fig_radar, use_container_width=True)
+
+        st.divider()
+
+        # ── Top exercices ──
+        st.markdown("#### Principaux exercices")
+        top = top_exercices(df)
+        fig_top = px.bar(
+            top, x="nb_seances", y="exercice", orientation="h",
+            labels={"nb_seances": "Nombre de séances", "exercice": ""},
+            text="nb_seances",
+        )
+        fig_top.update_layout(yaxis=dict(categoryorder="total ascending"))
+        fig_top.update_traces(textposition="outside")
+        st.plotly_chart(fig_top, use_container_width=True)
+
+        st.divider()
+
+        # ── Rapport mensuel ──
+        st.markdown("#### Rapport mensuel")
+        col_m1, col_m2 = st.columns(2)
+        with col_m1:
+            mois_choisi = st.selectbox("Mois", list(range(1, 13)),
+                                        format_func=lambda m: calendar.month_name[m],
+                                        index=date.today().month - 1)
+        with col_m2:
+            annee_choisie = st.selectbox("Année", sorted(df["date"].dt.year.unique().tolist(), reverse=True))
+
+        rapport = rapport_mensuel(df, annee_choisie, mois_choisi)
+        if not rapport:
+            st.info("Aucune donnée pour ce mois.")
+        else:
+            r1, r2, r3, r4, r5 = st.columns(5)
+            r1.metric("Séances", rapport["seances"])
+            r2.metric("Séries", rapport["series_totales"])
+            r3.metric("Volume (kg)", f"{rapport['volume_total']:,}",
+                      delta=f"{rapport['volume_vs_mois_precedent']}% vs mois préc." if rapport["volume_vs_mois_precedent"] is not None else None)
+            r4.metric("Groupes", rapport["groupes"])
+            r5.metric("Exercices", rapport["exercices"])
+
+            fig_mois = px.bar(
+                x=list(rapport["par_groupe"].keys()),
+                y=list(rapport["par_groupe"].values()),
+                labels={"x": "Groupe musculaire", "y": "Séries"},
+                title="Séries par groupe ce mois",
+            )
+            st.plotly_chart(fig_mois, use_container_width=True)
 
 # ════════════════════════════════════════════════════════════════════
 # TAB 4 — Progression par exercice
