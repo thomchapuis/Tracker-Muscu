@@ -111,7 +111,8 @@ with tab1:
             st.rerun()
     
     st.dataframe(
-        df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
+        #df[["date","exercice","groupe","series","reps","poids_kg","notes"]]
+        df
         .sort_index(ascending=True)
         .head(6)
         .assign(date=lambda x: x["date"].dt.strftime("%d/%m/%Y")),
