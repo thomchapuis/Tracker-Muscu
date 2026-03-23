@@ -37,7 +37,7 @@ with tab1:
     col1, col2 = st.columns([2, 1])
     with col1:
         groupe_filtre = st.selectbox("Groupe musculaire", list(EXERCISE_TO_GROUP.keys()))
-        exercice = st.selectbox("Exercice", EXERCISE_TO_GROUP[groupe_filtre])
+        exercice = st.selectbox("Exercice", ALL_EXERCISES[groupe_filtre])
     with col2:
         seance_date = st.date_input("Date", value=date.today())
 
