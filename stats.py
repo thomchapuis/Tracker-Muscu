@@ -104,3 +104,24 @@ def rapport_mensuel(df: pd.DataFrame, annee: int, mois: int) -> dict:
         "volume_vs_mois_precedent": round((volume - prev_volume) / prev_volume * 100, 1) if prev_volume else None,
         "par_groupe":     m.groupby("groupe")["series"].sum().to_dict(),
     }
+
+def progression_reps(df: pd.DataFrame, exercice: str) -> pd.DataFrame:
+    """Reps max par date pour un exercice au poids de corps."""
+    ex_df = df[df["exercice"] == exercice].copy()
+    return (
+        ex_df.groupby("date")["reps"]
+        .max()
+        .reset_index()
+        .sort_values("date")
+    )
+
+def volume_reps(df: pd.DataFrame, exercice: str) -> pd.DataFrame:
+    """Volume en reps totales par date pour un exercice au poids de corps."""
+    ex_df = df[df["exercice"] == exercice].copy()
+    ex_df["volume_reps"] = ex_df["series"] * ex_df["reps"]
+    return (
+        ex_df.groupby("date")["volume_reps"]
+        .sum()
+        .reset_index()
+        .sort_values("date")
+    )
