@@ -105,9 +105,16 @@ def rapport_mensuel(df: pd.DataFrame, annee: int, mois: int) -> dict:
         "par_groupe":     m.groupby("groupe")["series"].sum().to_dict(),
     }
 
+TRACTIONS = [
+    "Tractions prise pronation",
+    "Tractions prise pronation large",
+    "Tractions prise supination",
+    "Tractions prise neutre",
+]
+
 def progression_reps(df: pd.DataFrame, exercice: str) -> pd.DataFrame:
-    """Reps max par date pour un exercice au poids de corps."""
-    ex_df = df[df["exercice"] == exercice].copy()
+    ex_list = TRACTIONS if exercice == "__tractions__" else [exercice]
+    ex_df = df[df["exercice"].isin(ex_list)].copy()
     return (
         ex_df.groupby("date")["reps"]
         .max()
@@ -116,8 +123,8 @@ def progression_reps(df: pd.DataFrame, exercice: str) -> pd.DataFrame:
     )
 
 def volume_reps(df: pd.DataFrame, exercice: str) -> pd.DataFrame:
-    """Volume en reps totales par date pour un exercice au poids de corps."""
-    ex_df = df[df["exercice"] == exercice].copy()
+    ex_list = TRACTIONS if exercice == "__tractions__" else [exercice]
+    ex_df = df[df["exercice"].isin(ex_list)].copy()
     ex_df["volume_reps"] = ex_df["series"] * ex_df["reps"]
     return (
         ex_df.groupby("date")["volume_reps"]
