@@ -343,7 +343,3 @@ with tab4:
 
         fig.update_traces(line_color="#7F77DD")
         st.plotly_chart(fig, use_container_width=True)
-
-,
-# et
-,
