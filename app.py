@@ -302,18 +302,32 @@ with tab4:
         st.info("Aucune donnée encore.")
     else:
         ex_choice = st.selectbox("Exercice", [e for e in ALL_EXERCISES if e in df["exercice"].values])
-        metric_choice = st.radio("Métrique", ["Poids max (kg)", "Volume total"], horizontal=True)
+        is_bodyweight = ex_choice in BODYWEIGHT_EXERCISES
 
-        if metric_choice == "Poids max (kg)":
-            prog = progression_exercice(df, ex_choice)
-            fig = px.line(prog, x="date", y="poids_kg", markers=True,
-                          title=f"Poids max — {ex_choice}",
-                          labels={"poids_kg": "Poids (kg)", "date": ""})
+        if is_bodyweight:
+            metric_choice = st.radio("Métrique", ["Reps max", "Volume (reps totales)"], horizontal=True)
+            if metric_choice == "Reps max":
+                prog = progression_reps(df, ex_choice)
+                fig = px.line(prog, x="date", y="reps", markers=True,
+                              title=f"Reps max — {ex_choice}",
+                              labels={"reps": "Reps max", "date": ""})
+            else:
+                prog = volume_reps(df, ex_choice)
+                fig = px.line(prog, x="date", y="volume_reps", markers=True,
+                              title=f"Volume (reps totales) — {ex_choice}",
+                              labels={"volume_reps": "Reps totales", "date": ""})
         else:
-            prog = volume_exercice(df, ex_choice)
-            fig = px.line(prog, x="date", y="volume", markers=True,
-                          title=f"Volume — {ex_choice}",
-                          labels={"volume": "Volume (kg)", "date": ""})
+            metric_choice = st.radio("Métrique", ["Poids max (kg)", "Volume total"], horizontal=True)
+            if metric_choice == "Poids max (kg)":
+                prog = progression_exercice(df, ex_choice)
+                fig = px.line(prog, x="date", y="poids_kg", markers=True,
+                              title=f"Poids max — {ex_choice}",
+                              labels={"poids_kg": "Poids (kg)", "date": ""})
+            else:
+                prog = volume_exercice(df, ex_choice)
+                fig = px.line(prog, x="date", y="volume", markers=True,
+                              title=f"Volume — {ex_choice}",
+                              labels={"volume": "Volume (kg)", "date": ""})
 
         fig.update_traces(line_color="#7F77DD")
         st.plotly_chart(fig, use_container_width=True)
