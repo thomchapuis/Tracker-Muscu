@@ -57,6 +57,17 @@ EXERCISES = {
     ],
 }
 
+BODYWEIGHT_EXERCISES = [
+    "Dips",
+    "Tractions prise pronation",
+    "Tractions prise pronation large",
+    "Tractions prise supination",
+    "Tractions prise neutre",
+    "Suspendu 1 bras - gauche",
+    "Suspendu 1 bras - droite",
+    "Dead Hang",
+]
+
 # Liste plate pour les sélecteurs
 ALL_EXERCISES = [ex for group in EXERCISES.values() for ex in group]
 
