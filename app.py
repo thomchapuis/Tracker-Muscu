@@ -2,16 +2,18 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from datetime import date
+import plotly.graph_objects as go
+import calendar
 
 from data import load_data, save_set, get_client, delete_row
 from stats import (
     volume_par_seance, charge_par_groupe_semaine,
     progression_exercice, volume_exercice, resume_semaine,
-    radar_repartition, top_exercices, rapport_mensuel   # ← nouveaux
+    radar_repartition, top_exercices, rapport_mensuel,
+    progression_reps, volume_reps,                       
 )
-import plotly.graph_objects as go
-import calendar
-from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES
+
+from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES, BODYWEIGHT_EXERCISES  # ← ajout
 
 
 st.set_page_config(
