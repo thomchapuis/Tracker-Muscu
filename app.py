@@ -13,7 +13,7 @@ from stats import (
     progression_reps, volume_reps,                       
 )
 
-from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES, BODYWEIGHT_EXERCISES  # ← ajout
+from exercises import ALL_EXERCISES, EXERCISE_TO_GROUP, EXERCISES, BODYWEIGHT_EXERCISES, TRACTIONS  # ← ajout
 
 
 st.set_page_config(
