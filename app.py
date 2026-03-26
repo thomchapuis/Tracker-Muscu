@@ -301,8 +301,20 @@ with tab4:
     if df.empty:
         st.info("Aucune donnée encore.")
     else:
-        ex_choice = st.selectbox("Exercice", [e for e in ALL_EXERCISES if e in df["exercice"].values])
-        is_bodyweight = ex_choice in BODYWEIGHT_EXERCISES
+        # Construction de la liste avec l'option combinée
+        tractions_dans_df = [e for e in TRACTIONS if e in df["exercice"].values]
+        autres_exos = [e for e in ALL_EXERCISES
+                       if e in df["exercice"].values
+                       and e not in TRACTIONS]
+        
+        options = []
+        if tractions_dans_df:
+            options.append("Tractions (toutes prises)")
+        options += autres_exos
+        
+        ex_label = st.selectbox("Exercice", options)
+        ex_choice = "__tractions__" if ex_label == "Tractions (toutes prises)" else ex_label
+        is_bodyweight = ex_choice in BODYWEIGHT_EXERCISES or ex_choice == "__tractions__"
 
         if is_bodyweight:
             metric_choice = st.radio("Métrique", ["Reps max", "Volume (reps totales)"], horizontal=True)
