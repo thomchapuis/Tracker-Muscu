@@ -321,12 +321,12 @@ with tab4:
             if metric_choice == "Reps max":
                 prog = progression_reps(df, ex_choice)
                 fig = px.line(prog, x="date", y="reps", markers=True,
-                              title=f"Reps max — {ex_choice}",
+                              title=f"Reps max — {ex_label}",
                               labels={"reps": "Reps max", "date": ""})
             else:
                 prog = volume_reps(df, ex_choice)
                 fig = px.line(prog, x="date", y="volume_reps", markers=True,
-                              title=f"Volume (reps totales) — {ex_choice}",
+                              title=f"Volume (reps totales) — {ex_label}",
                               labels={"volume_reps": "Reps totales", "date": ""})
         else:
             metric_choice = st.radio("Métrique", ["Poids max (kg)", "Volume total"], horizontal=True)
@@ -344,3 +344,6 @@ with tab4:
         fig.update_traces(line_color="#7F77DD")
         st.plotly_chart(fig, use_container_width=True)
 
+,
+# et
+,
