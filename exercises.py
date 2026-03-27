@@ -34,6 +34,7 @@ EXERCISES = {
         "Soulevé de terre",
         "Soulevé de terre roumain",
         "Leg curl",
+        "Leg extension",
         "Presse à cuisses",
         "Fentes",
         "Mollets",
