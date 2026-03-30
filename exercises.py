@@ -36,6 +36,8 @@ EXERCISES = {
         "Leg curl",
         "Leg extension",
         "Presse à cuisses",
+        "Step-up",
+        "Pistol Squat Box",
         "Fentes",
         "Mollets",
     ],
